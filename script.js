@@ -9,6 +9,17 @@ const greeting = document.getElementById("greeting");
 // track attendance
 let count = 0;
 const maxCount = 50;
+const teamCounts = {
+  water: 0,
+  zero: 0,
+  power: 0,
+};
+
+const teamDisplayNames = {
+  water: "Team Water Wise",
+  zero: "Team Net Zero",
+  power: "Team Renewables",
+};
 
 // Handle form submission
 form.addEventListener("submit", function (event) {
@@ -20,7 +31,10 @@ form.addEventListener("submit", function (event) {
   const teamName = teamSelect.selectedOptions[0].text;
 
   // Increment count
-  count++;
+  count++;  
+
+  // Track team attendance
+  teamCounts[team]++;
 
   // Update attendee count display
   attendeeCount.textContent = count;
@@ -35,7 +49,17 @@ form.addEventListener("submit", function (event) {
 
   // Welcome Message
   if (count === maxCount) {
-    greeting.textContent = `🎉 ${name} from ${teamName}! The event is now full!`;
+    const winningTeam = Object.keys(teamCounts).reduce(function (
+      bestKey,
+      currentKey,
+    ) {
+      if (teamCounts[currentKey] > teamCounts[bestKey]) {
+        return currentKey;
+      }
+      return bestKey;
+    }, "water");
+
+    greeting.textContent = `🎉 ${name} from ${teamName}! ${teamDisplayNames[winningTeam]} wins with the most attendees!`;
     document.querySelector(".container").classList.add("celebration");
   } else {
     greeting.textContent = `Welcome, ${name} from ${teamName}!`;
